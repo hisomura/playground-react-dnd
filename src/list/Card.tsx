@@ -1,7 +1,6 @@
-import React, { useEffect, useRef } from "react";
+import React, { useRef } from "react";
 import { DropTargetMonitor, useDrag, useDrop } from "react-dnd";
 import { XYCoord } from "dnd-core";
-import { getEmptyImage } from "react-dnd-html5-backend";
 
 export const ItemTypes = {
   CARD: "card",
@@ -82,16 +81,12 @@ export const Card: React.FC<CardProps> = ({ id, text, index, moveCard }) => {
     },
   });
 
-  const [{ isDragging }, drag, preview] = useDrag({
+  const [{ isDragging }, drag] = useDrag({
     item: { type: ItemTypes.CARD, id, index },
     collect: (monitor: any) => ({
       isDragging: monitor.isDragging(),
     }),
   });
-
-  useEffect(() => {
-    preview(getEmptyImage(), { captureDraggingState: true });
-  }, [preview]);
 
   const opacity = isDragging ? 0 : 1;
   drag(drop(ref));

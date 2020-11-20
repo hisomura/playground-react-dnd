@@ -2,13 +2,13 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { Container } from "./list/Container";
 import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
+import { TouchBackend } from "react-dnd-touch-backend";
 import reportWebVitals from "./reportWebVitals";
 
 function App() {
   return (
     <div className="App">
-      <DndProvider backend={HTML5Backend}>
+      <DndProvider backend={TouchBackend} options={{ enableMouseEvents: true }}>
         <Container />
       </DndProvider>
     </div>
