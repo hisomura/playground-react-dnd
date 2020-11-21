@@ -11,7 +11,6 @@ export const Example: React.FC = () => {
     <div>
       <Container hideSourceOnDrag={hideSourceOnDrag} />
       <p>
-        aiueo
         <label htmlFor="hideSourceOnDrag">
           <input
             id="hideSourceOnDrag"

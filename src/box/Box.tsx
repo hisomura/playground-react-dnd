@@ -1,18 +1,16 @@
 import React from "react";
-import { useDrag, XYCoord } from "react-dnd";
+import { useDrag } from "react-dnd";
 
 export const ItemTypes = {
   BOX: "box",
 };
 
 function getStyle(
-  left: number,
-  top: number,
-  difference: XYCoord | null
+  x: number,
+  y: number,
+  transition: string = "transform 0.05s"
 ): React.CSSProperties {
-  const diffX = difference?.x ?? 0;
-  const diffY = difference?.y ?? 0;
-  const transform = `translate(${diffX}px, ${diffY}px)`;
+  const transform = `translate(${x}px, ${y}px)`;
 
   return {
     position: "absolute",
@@ -20,9 +18,7 @@ function getStyle(
     backgroundColor: "white",
     padding: "0.5rem 1rem",
     cursor: "move",
-    left,
-    top,
-    transition: "transform 0.1s",
+    transition,
     transform,
   };
 }
@@ -34,25 +30,21 @@ export interface BoxProps {
   hideSourceOnDrag?: boolean;
 }
 
-export const Box: React.FC<BoxProps> = ({
-  id,
-  left,
-  top,
-  children,
-}) => {
-  const [{ difference, isDragging }, drag] = useDrag({
+export const Box: React.FC<BoxProps> = ({ id, left, top, children }) => {
+  const [{ offset, isDragging }, drag] = useDrag({
     item: { id, left, top, type: ItemTypes.BOX },
     collect: (monitor) => {
       return {
         isDragging: monitor.isDragging(),
-        difference: monitor.getDifferenceFromInitialOffset(),
+        offset: monitor.getSourceClientOffset(),
       };
     },
   });
 
   const style = isDragging
-    ? getStyle(left, top, difference)
-    : getStyle(left, top, null);
+    ? getStyle(offset?.x ?? 0, offset?.y ?? 0)
+    : getStyle(left, top);
+
   return (
     <div ref={drag} style={style}>
       {children}
