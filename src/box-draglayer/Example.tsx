@@ -12,7 +12,7 @@ export const Example: React.FC = () => {
   return (
     <div>
       <Container />
-      <CustomDragLayer snapToGrid={snapToGridWhileDragging} />
+      <CustomDragLayer />
       <p>
         <label htmlFor="snapToGridWhileDragging">
           <input

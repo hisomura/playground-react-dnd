@@ -3,4 +3,5 @@ export interface DragItem {
   type: string;
   left: number;
   top: number;
+  title: string;
 }

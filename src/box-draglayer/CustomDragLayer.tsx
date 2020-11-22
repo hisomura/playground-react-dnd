@@ -1,8 +1,8 @@
-import React from "react";
-import { XYCoord, useDragLayer } from "react-dnd";
+import React, {useEffect, useRef, useState} from "react";
+import { useDragLayer, XYCoord } from "react-dnd";
 import { ItemTypes } from "./ItemTypes";
 import { BoxDragPreview } from "./BoxDragPreview";
-import { snapToGrid } from "./snapToGrid";
+import { DragItem } from "./interfaces";
 
 const layerStyles: React.CSSProperties = {
   position: "fixed",
@@ -17,71 +17,128 @@ const layerStyles: React.CSSProperties = {
 function getItemStyles(
   initialOffset: XYCoord | null,
   currentOffset: XYCoord | null,
-  isSnapToGrid: boolean
+  isAnimatingDropEffect: boolean
 ) {
-  if (!initialOffset || !currentOffset) {
-    return {
-      display: "none",
-    };
+  if (!initialOffset) {
+    return { display: "none" };
   }
 
-  let { x, y } = currentOffset;
-
-  if (isSnapToGrid) {
-    x -= initialOffset.x;
-    y -= initialOffset.y;
-    [x, y] = snapToGrid(x, y);
-    x += initialOffset.x;
-    y += initialOffset.y;
-  }
+  let { x, y } = currentOffset ?? initialOffset;
 
   const transform = `translate(${x}px, ${y}px)`;
+  const transition = isAnimatingDropEffect ? "all 1s" : "all 0s";
+
   return {
     transform,
+    transition,
     WebkitTransform: transform,
   };
 }
 
-export interface CustomDragLayerProps {
-  snapToGrid: boolean;
-}
+type DropAnimationState = {
+  dragItem: DragItem | null;
+  prevStateIsDragging: boolean;
+  isAnimatingDropEffect: boolean;
+  dragInitialOffset: XYCoord | null;
+};
 
-export const CustomDragLayer: React.FC<CustomDragLayerProps> = (props) => {
-  const {
-    itemType,
-    isDragging,
-    item,
-    initialOffset,
-    currentOffset,
-  } = useDragLayer((monitor) => ({
-    item: monitor.getItem(),
-    itemType: monitor.getItemType(),
-    initialOffset: monitor.getInitialSourceClientOffset(),
-    currentOffset: monitor.getSourceClientOffset(),
-    isDragging: monitor.isDragging(),
-  }));
+type DraggableBoxCollectedProps = {
+  item: DragItem | null;
+  itemType: keyof typeof ItemTypes | null;
+  initialOffset: XYCoord | null;
+  currentOffset: XYCoord | null;
+  isDragging: boolean;
+};
 
-  console.log(itemType, isDragging, item, initialOffset, currentOffset);
+export const CustomDragLayer: React.FC = (props) => {
+  const [dropAnimationState, setDropAnimationState] = useState<
+    DropAnimationState
+  >({
+    dragItem: null,
+    prevStateIsDragging: false,
+    isAnimatingDropEffect: false,
+    dragInitialOffset: null,
+  });
+  const ref = useRef<HTMLDivElement>(null);
 
-  function renderItem() {
-    switch (itemType) {
-      case ItemTypes.BOX:
-        return <BoxDragPreview title={item.title} />;
-      default:
-        return null;
+  const { isDragging, item, initialOffset, currentOffset } = useDragLayer<
+    DraggableBoxCollectedProps
+  >((monitor) => {
+    const isDragging = monitor.isDragging();
+    const currentOffset = monitor.getSourceClientOffset();
+
+    if (isDragging && currentOffset) {
+      return {
+        item: monitor.getItem() as DragItem | null,
+        itemType: monitor.getItemType() as keyof typeof ItemTypes | null,
+        initialOffset: monitor.getInitialSourceClientOffset(),
+        currentOffset,
+        isDragging,
+      };
     }
+
+    return {
+      item: null,
+      itemType: null,
+      initialOffset: null,
+      currentOffset: null,
+      isDragging: false,
+    };
+  });
+
+  useEffect(() => {
+    // ref.set
+
+  }, [])
+
+
+  if (initialOffset && !dropAnimationState.dragInitialOffset) {
+    setDropAnimationState({
+      dragItem: item,
+      isAnimatingDropEffect: false,
+      prevStateIsDragging: true,
+      dragInitialOffset: initialOffset,
+    });
   }
 
-  if (!isDragging) {
+  if (!isDragging && dropAnimationState.prevStateIsDragging) {
+    setDropAnimationState({
+      dragItem: dropAnimationState.dragItem,
+      isAnimatingDropEffect: true,
+      prevStateIsDragging: false,
+      dragInitialOffset: dropAnimationState.dragInitialOffset,
+    });
+  }
+
+  if (
+    !isDragging &&
+    !dropAnimationState.isAnimatingDropEffect &&
+    !dropAnimationState.prevStateIsDragging
+  ) {
     return null;
   }
+  const title = item?.title ?? dropAnimationState.dragItem?.title ?? 'no name'
   return (
     <div style={layerStyles}>
       <div
-        style={getItemStyles(initialOffset, currentOffset, props.snapToGrid)}
+        ref={ref}
+        style={getItemStyles(
+          initialOffset ?? dropAnimationState.dragInitialOffset,
+          currentOffset,
+          dropAnimationState.isAnimatingDropEffect
+        )}
+        onTransitionEnd={(event) => {
+          setDropAnimationState({
+            dragItem: item,
+            isAnimatingDropEffect: false,
+            prevStateIsDragging: true,
+            dragInitialOffset: initialOffset,
+          })
+        }}
       >
-        {renderItem()}
+        {<BoxDragPreview title={title} />}
       </div>
     </div>
   );
 };
+
