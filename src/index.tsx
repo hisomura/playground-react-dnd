@@ -4,7 +4,8 @@ import ReactDOM from "react-dom";
 import { DndProvider } from "react-dnd";
 import { TouchBackend } from "react-dnd-touch-backend";
 import reportWebVitals from "./reportWebVitals";
-import { Example } from "./box/Example";
+// import { Example } from "./box/Example";
+import { Example } from "./box-draglayer/Example";
 
 function App() {
   return (

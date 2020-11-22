@@ -1,22 +1,17 @@
-import React, { useState, useCallback } from 'react'
-import { Container } from './Container'
-import { CustomDragLayer } from './CustomDragLayer'
+import React, { useState, useCallback } from "react";
+import { Container } from "./Container";
+import { CustomDragLayer } from "./CustomDragLayer";
 
 export const Example: React.FC = () => {
-  const [snapToGridAfterDrop, setSnapToGridAfterDrop] = useState(false)
-  const [snapToGridWhileDragging, setSnapToGridWhileDragging] = useState(false)
-
-  const handleSnapToGridAfterDropChange = useCallback(() => {
-    setSnapToGridAfterDrop(!snapToGridAfterDrop)
-  }, [snapToGridAfterDrop])
+  const [snapToGridWhileDragging, setSnapToGridWhileDragging] = useState(false);
 
   const handleSnapToGridWhileDraggingChange = useCallback(() => {
-    setSnapToGridWhileDragging(!snapToGridWhileDragging)
-  }, [snapToGridWhileDragging])
+    setSnapToGridWhileDragging(!snapToGridWhileDragging);
+  }, [snapToGridWhileDragging]);
 
   return (
     <div>
-      <Container snapToGrid={snapToGridAfterDrop} />
+      <Container />
       <CustomDragLayer snapToGrid={snapToGridWhileDragging} />
       <p>
         <label htmlFor="snapToGridWhileDragging">
@@ -28,17 +23,7 @@ export const Example: React.FC = () => {
           />
           <small>Snap to grid while dragging</small>
         </label>
-        <br />
-        <label htmlFor="snapToGridAfterDrop">
-          <input
-            id="snapToGridAfterDrop"
-            type="checkbox"
-            checked={snapToGridAfterDrop}
-            onChange={handleSnapToGridAfterDropChange}
-          />
-          <small>Snap to grid after drop</small>
-        </label>
       </p>
     </div>
-  )
-}
+  );
+};

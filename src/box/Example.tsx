@@ -1,11 +1,11 @@
-import React, { useState, useCallback } from 'react'
-import { Container } from './Container'
+import React, { useState, useCallback } from "react";
+import { Container } from "./Container";
 
 export const Example: React.FC = () => {
-  const [hideSourceOnDrag, setHideSourceOnDrag] = useState(true)
+  const [hideSourceOnDrag, setHideSourceOnDrag] = useState(true);
   const toggle = useCallback(() => setHideSourceOnDrag(!hideSourceOnDrag), [
     hideSourceOnDrag,
-  ])
+  ]);
 
   return (
     <div>
@@ -22,5 +22,5 @@ export const Example: React.FC = () => {
         </label>
       </p>
     </div>
-  )
-}
+  );
+};
