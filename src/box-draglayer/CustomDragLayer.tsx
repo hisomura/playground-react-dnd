@@ -68,9 +68,9 @@ export const CustomDragLayer: React.FC = (props) => {
     const currentOffset = monitor.getSourceClientOffset();
 
     // @ts-ignore
-    console.log(monitor.getDropResult())
-    // @ts-ignore
-    console.log(monitor.didDrop())
+    // console.log(monitor.getDropResult())
+    // // @ts-ignore
+    // console.log(monitor.didDrop())
     // console.log(monitor.getItem())
 
     if (isDragging && currentOffset) {
