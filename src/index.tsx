@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 // import { Container } from "./list/Container";
 import { DndProvider } from "react-dnd";
-import { TouchBackend } from "react-dnd-touch-backend";
+import { HTML5Backend as DndBackend } from "react-dnd-html5-backend";
 import reportWebVitals from "./reportWebVitals";
 // import { Example } from "./box/Example";
 import { Example } from "./box-draglayer/Example";
@@ -10,7 +10,7 @@ import { Example } from "./box-draglayer/Example";
 function App() {
   return (
     <div className="App">
-      <DndProvider backend={TouchBackend} options={{ enableMouseEvents: true }}>
+      <DndProvider backend={DndBackend} options={{ enableMouseEvents: true }}>
         {/*<Container />*/}
         <Example />
       </DndProvider>

@@ -2,6 +2,7 @@ import React from "react";
 import { DragSourceMonitor, useDrag } from "react-dnd";
 import { ItemTypes } from "./ItemTypes";
 import { Box } from "./Box";
+import { getEmptyImage } from 'react-dnd-html5-backend'
 
 function getStyles(
   left: number,
@@ -32,12 +33,14 @@ export interface DraggableBoxProps {
 
 export const DraggableBox: React.FC<DraggableBoxProps> = (props) => {
   const { id, title, left, top } = props;
-  const [{ isDragging }, drag] = useDrag({
+  const [{ isDragging }, drag ,preview] = useDrag({
     item: { type: ItemTypes.BOX, id, left, top, title },
     collect: (monitor: DragSourceMonitor) => ({
       isDragging: monitor.isDragging(),
     }),
   });
+
+  preview(getEmptyImage())
 
   return (
     <div ref={drag} style={getStyles(left, top, isDragging)}>
