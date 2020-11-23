@@ -20,6 +20,7 @@ export const Container: React.FC<{}> = () => {
   const [boxes, setBoxes] = useState<BoxMap>({
     a: { top: 20, left: 80, title: "Drag me around" },
     b: { top: 180, left: 20, title: "Drag me too" },
+    c: { top: 100, left: 20, title: "hoge" },
   });
 
   const moveBox = useCallback(

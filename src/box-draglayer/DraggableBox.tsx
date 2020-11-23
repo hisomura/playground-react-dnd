@@ -35,9 +35,10 @@ export const DraggableBox: React.FC<DraggableBoxProps> = (props) => {
   const { id, title, left, top } = props;
   const [{ isDragging }, drag ,preview] = useDrag({
     item: { type: ItemTypes.BOX, id, left, top, title },
-    collect: (monitor: DragSourceMonitor) => ({
+    collect: (monitor: DragSourceMonitor) => {
+      return {
       isDragging: monitor.isDragging(),
-    }),
+    }},
   });
 
   preview(getEmptyImage())

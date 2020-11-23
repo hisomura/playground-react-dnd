@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useReducer, useRef, useState} from "react";
 import { useDragLayer, XYCoord } from "react-dnd";
 import { ItemTypes } from "./ItemTypes";
 import { BoxDragPreview } from "./BoxDragPreview";
@@ -66,6 +66,12 @@ export const CustomDragLayer: React.FC = (props) => {
   >((monitor) => {
     const isDragging = monitor.isDragging();
     const currentOffset = monitor.getSourceClientOffset();
+
+    // @ts-ignore
+    console.log(monitor.getDropResult())
+    // @ts-ignore
+    console.log(monitor.didDrop())
+    // console.log(monitor.getItem())
 
     if (isDragging && currentOffset) {
       return {
